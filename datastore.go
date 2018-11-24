@@ -2,8 +2,10 @@
 
 package main
 
+import "sync"
+
 type Datastore struct {
-	// not threadsafe!
+	sync.RWMutex
 	data map[string][]byte
 }
 
@@ -14,9 +16,14 @@ func NewDatastore() *Datastore {
 }
 
 func (d *Datastore) Set(key string, value []byte) {
+	d.Lock()
 	d.data[key] = value
+	d.Unlock()
 }
 
 func (d *Datastore) Get(key string) []byte {
-	return d.data[key]
+	d.RLock()
+	ret := d.data[key]
+	d.RUnlock()
+	return ret
 }

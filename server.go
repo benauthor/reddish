@@ -83,6 +83,6 @@ func (s *Server) Serve() {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		s.handler.Handle(conn)
+		go s.handler.Handle(conn)
 	}
 }
